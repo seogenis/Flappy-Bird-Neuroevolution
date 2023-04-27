@@ -1,0 +1,108 @@
+import pygame
+import random
+
+#initialising moddules in pygame
+pygame.init()
+
+SCREEN = pygame.display.set_mode((500,750))#setting display
+
+
+#background
+BACKGROUND_IMAGE = pygame.image.load('FlappyBirdBG.jpg')
+
+
+#Bird
+BIRD_IMAGE = pygame.image.load('SEAN_IMAGE1.png')
+bird_x = 50
+bird_y = 300
+bird_y_change = 0
+
+def display_bird(x,y):
+    SCREEN.blit(BIRD_IMAGE, (x,y))
+
+    
+#obstacles
+OBSTACLE_WIDTH = 70
+OBSTACLE_HEIGHT = random.randint(100, 200)
+OBSTACLE_COLOR = (211, 253, 117)
+OBSTACLE_X_CHANGE = -2
+obstacle_x = 500
+space = 150
+
+def display_obstacle(height):
+    pygame.draw.rect(SCREEN, OBSTACLE_COLOR, (obstacle_x, 0, OBSTACLE_WIDTH, height))
+    bottom_obstacle_height = height + space
+    pygame.draw.rect(SCREEN, OBSTACLE_COLOR, (obstacle_x, bottom_obstacle_height, OBSTACLE_WIDTH, 585 - space - height))
+
+    
+#Collision detection
+def collision_detection (obstacle_x, obstacle_height, bird_y, bottom_obstacle_height):
+    if obstacle_x >= 50 and obstacle_x <= (50 + 64): #if the bird is at same x as obstacle
+        if bird_y <= obstacle_height or bird_y >= (bottom_obstacle_height - 64):
+            return True
+    return False
+
+
+#Score
+score = 0
+SCORE_FONT = pygame.font.Font('freesansbold.ttf',32)
+
+def score_display(score):
+    display = SCORE_FONT.render(f"Score: {score}", True, (255,255,255))
+    SCREEN.blit(display,(10,10))
+    
+
+running = True
+while running:
+    
+    SCREEN.fill((0,0,255))
+    
+    #displaying background, starts drawing image from top left corner
+    SCREEN.blit(BACKGROUND_IMAGE, (0,0))
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                bird_y_change = -2.5
+                        
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                bird_y_change = 2.5
+                               
+    
+    bird_y += bird_y_change
+    
+    if bird_y <= 0:
+        bird_y = 0
+    if bird_y >= 530:
+        bird_y = 530
+    
+
+    obstacle_x += OBSTACLE_X_CHANGE
+    if obstacle_x <= -10:
+        obstacle_x = 500
+        OBSTACLE_HEIGHT = random.randint(150,350)
+        #score += 1
+    display_obstacle(OBSTACLE_HEIGHT)
+    
+
+    #collision
+    collision = collision_detection(obstacle_x, OBSTACLE_HEIGHT - 10, bird_y, OBSTACLE_HEIGHT + space + 10)
+    
+    if collision:
+        pygame.quit()
+
+        
+    #display bird
+    display_bird(bird_x, bird_y)
+    
+    #display score
+    score_display(score)
+                               
+    #update display        
+    pygame.display.update()
+
+pygame.quit()
