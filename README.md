@@ -1,5 +1,8 @@
 # Flappy Bird Evolution Algorithm NEAT
 
+<img width="762" alt="Flappy Bird" src="https://github.com/user-attachments/assets/276b45b1-008e-4ff0-8c38-3099b84c07e9">
+
+
 This project implements an evolutionary algorithm using NEAT (NeuroEvolution of Augmenting Topologies) to train a set of birds to play the game Flappy Bird. The project is built using Python and Pygame.
 
 ## Project Overview
